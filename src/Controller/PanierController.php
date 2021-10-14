@@ -10,15 +10,26 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PanierController extends AbstractController
 {
-    #[Route('/panier', name: 'panier')]
-    public function index(Request $request, ProduitRepository $repo): Response
+/**
+
+     * @Route("/panier", name="panier")
+
+     */  
+     public function index(Request $request, ProduitRepository $repo): Response
     {
+        // on recupere la $session pour recuperer le panier
         $session = $request->getSession();
+        // s'il y a quelque chose dans le panier alors on recupere le panier sinon si c'est vide on recupere ce vide
         $panier = $session->get('panier', []);
 
         $detailPanier = [];
 
+        $total = 0;
+        $nombreProduit = 0;
         foreach ($panier as $idProduit => $quantite ){
+            $nombreProduit += $quantite;
+            $produit = $repo->find($idProduit);
+            $total += $produit->getPrix() * $quantite;
             $detailPanier[]= [
                 'produit' => $repo->find($idProduit),
                 'quantite' => $quantite,
@@ -28,10 +39,18 @@ class PanierController extends AbstractController
 
         return $this->render('panier/index.html.twig', [
             'detailPanier' => $detailPanier,
+            'total' => $total,
+            'nombreProduit' => $nombreProduit,
         ]);
     }
+    
 
-    #[Route('/ajout-panier/{id}', name: 'ajout_panier')]
+
+/**
+
+     * @Route("/ajout-panier/{id}", name="ajout_panier")
+
+     */
     public function ajoutPanier($id, Request $request): Response
     {
         $session = $request->getSession();

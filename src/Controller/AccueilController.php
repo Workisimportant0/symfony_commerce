@@ -9,7 +9,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccueilController extends AbstractController
 {
-    #[Route('/', name: 'accueil')] //juste un / en retirant accueil car comme ça on tombe directement sur accueil du site
+    /**
+
+     * @Route("/", name="accueil")
+
+     */ //juste un / en retirant accueil car comme ça on tombe directement sur accueil du site
     public function index(ProduitRepository $repo): Response
     {
         $listeProduits = $repo->findAll();
