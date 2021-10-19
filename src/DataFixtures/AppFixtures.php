@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Produit;
+use App\Entity\Slide;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -52,7 +53,14 @@ class AppFixtures extends Fixture
             ->setPassword($this->hasher->hashPassword($utilisateur, "azerty"));
 
         $manager->persist($utilisateur);
-
+        //Ajouter slide
+        for ($i = 1; $i <= 3; $i++) {
+            $slide = new Slide();
+            $slide->setTitre($faker->sentence(3));
+            $slide->setTexte($faker->text(100));
+            $slide->setNomImage("cafe" . $i . ".jpg");
+            $manager->persist($slide);
+        }
         $manager->flush(); //flush c'est pour enregistrer le produit
     }
 }
