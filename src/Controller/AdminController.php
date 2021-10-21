@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Categorie;
 use App\Entity\Produit;
 use App\Entity\Slide;
+use App\Repository\CategorieRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\SlideRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,17 +23,61 @@ use Symfony\Component\Validator\Constraints\File;
 class AdminController extends AbstractController
 {
     /**
-
+     
+     * @Route("/admin-produit", name="admin_produit")
      * @Route("/admin", name="admin")
-
+     
      */
-    public function index(ProduitRepository $repo): Response
+    public function administrationProduit(ProduitRepository $repoProduit): Response
     {
-        $listeProduit = $repo->findAll();
-        return $this->render('admin/index.html.twig', [
-            'listeProduit' => $listeProduit,
+        $listeProduit = $repoProduit->findAll();
+
+        $listeProduitParCategorie = [];
+
+        foreach ($listeProduit as $produit) {
+            $nomCategorie = $produit->getCategorie()->getNom();
+
+            if (!isset($listeProduitParCategorie[$nomCategorie])) {
+
+                $listeProduitParCategorie[$nomCategorie] = [];
+
+            }
+            
+            $listeProduitParCategorie[$nomCategorie][] = $produit;
+
+        }
+
+        return $this->render('admin/admin-produit.html.twig', [
+            'listeProduitParCategorie' => $listeProduitParCategorie,
         ]);
     }
+    /**
+
+     * @Route("/admin/slide", name="admin_slide")
+
+     */
+    public function administrationSlide(SlideRepository $repoSlide): Response
+    {
+
+        $listeSlide = $repoSlide->findAll();
+
+        return $this->render('admin/admin-slide.html.twig', [
+            'listeSlide' => $listeSlide,
+        ]);
+    }
+    /**
+
+     * @Route("/admin/categorie", name="admin_categorie")
+
+     */
+    public function administrationCategories(CategorieRepository $repoCategorie): Response
+    {
+        $listeCategorie = $repoCategorie->findAll();
+        return $this->render('admin/admin-categorie.html.twig', [
+            'listeCategorie' => $listeCategorie,
+        ]);
+    }
+
     //la route s'appellera : suppression_produit
 
     //le chemin sera : /admin/supression-produit/42
@@ -69,7 +116,17 @@ class AdminController extends AbstractController
 
 
 
-        $formulaire = $this->createFormBuilder($produit)->add('designation', TextType::class, ['label' => 'Désignation', 'attr' => ['placeholder' => 'Nom du produit', 'class' => 'form-control'], 'row_attr' => ['class' => 'form-group'],])->add('description', TextareaType::class, ['attr' => ['placeholder' => 'Description du produit', 'class' => 'form-control'], 'row_attr' => ['class' => 'form-group'],])->add('prix', null, ['attr' => ['label' => 'Prix', 'placeholder' => 'Prix TTC', 'class' => 'form-control'], 'row_attr' => ['class' => 'form-group'],])->add('nomImage', FileType::class, ['label' => 'Image', 'mapped' => false, 'required' => false, 'attr' => ['class' => 'form-control'], 'constraints' => [new File(['mimeTypes' => ['image/jpeg', 'image/png'], 'mimeTypesMessage' => "Format jpg ou png uniquement"])]])->add('save', SubmitType::class, ['label' => 'Enregistrer', 'attr' => ['btn btn-success'],])->getForm();
+        $formulaire = $this->createFormBuilder($produit)
+            ->add('designation', TextType::class, ['label' => 'Désignation', 'attr' => ['placeholder' => 'Nom du produit', 'class' => 'form-control'], 'row_attr' => ['class' => 'form-group'],])
+            ->add('categorie', EntityType::class, [
+                'class' => Categorie::class,
+                'choice_label' => 'nom',
+                'attr' => ['class' => 'form-control'],
+                'row_attr' => ['class' => 'form-group'],
+            ])
+            ->add('description', TextareaType::class, ['attr' => ['placeholder' => 'Description du produit', 'class' => 'form-control'], 'row_attr' => ['class' => 'form-group'],])
+            ->add('prix', null, ['attr' => ['label' => 'Prix', 'placeholder' => 'Prix TTC', 'class' => 'form-control'], 'row_attr' => ['class' => 'form-group'],])
+            ->add('nomImage', FileType::class, ['label' => 'Image', 'mapped' => false, 'required' => false, 'attr' => ['class' => 'form-control'], 'constraints' => [new File(['mimeTypes' => ['image/jpeg', 'image/png'], 'mimeTypesMessage' => "Format jpg ou png uniquement"])]])->add('save', SubmitType::class, ['label' => 'Enregistrer', 'attr' => ['btn btn-success'],])->getForm();
 
 
 
@@ -113,20 +170,6 @@ class AdminController extends AbstractController
         return $this->render('admin/edition-produit.html.twig', ['produit' => $produit, 'vueFormulaire' => $vueFormulaire]);
     }
 
-    /**
-
-     * @Route("/admin", name="admin")
-
-     */
-    public function principal(ProduitRepository $repoProduit, SlideRepository $repoSlide): Response
-    {
-        $listeProduit = $repoProduit->findAll();
-        $listeSlide = $repoSlide->findAll();
-        return $this->render('admin/index.html.twig', [
-            'listeProduit' => $listeProduit,
-            'listeSlide' => $listeSlide,
-        ]);
-    }
 
     /**
 
@@ -206,5 +249,4 @@ class AdminController extends AbstractController
 
         return $this->render('admin/edition-slide.html.twig', ['slide' => $slide, 'vueFormulaire' => $vueFormulaire]);
     }
-
 }
