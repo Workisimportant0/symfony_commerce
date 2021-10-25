@@ -12,8 +12,7 @@ class AccueilController extends AbstractController
     #[Route('/', name: 'accueil')] //juste un / en retirant accueil car comme ça on tombe directement sur accueil du site
     public function index(ProduitRepository $repo): Response
     {
-        $listeProduits = $repo->findAll();
-
+        $listeProduits = $repo->findAllJoinLibelle();
         return $this->render('accueil/index.html.twig', ["listeProduits" => $listeProduits,]);
         //render c'est une vue View 
     }

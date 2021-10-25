@@ -1,0 +1,55 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}
+	Administration
+{% endblock %}
+
+{% block body %}
+	<h1>
+		Gestion des slides
+	</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					ID
+				</th>
+				<th>
+					Image
+				</th>
+				<th>
+					Titre
+				</th>
+				<th>
+					Texte
+				</th>
+				<th>
+					Actions
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for slide in listeSlide %}
+				<tr>
+					<td>
+						{{ slide.id }}
+					</td>
+					<td>
+						<img style="width:50px;height:50px" src="/uploads/{{ slide.nomImage }}"/>
+					</td>
+					<td>
+						{{ slide.titre }}
+					</td>
+					<td>
+						{{ slide.texte }}
+					</td>
+					<td>
+						<a class="btn badge bg-success" href="">Modifier</a>
+						<a class="btn badge bg-danger" href="">Supprimer</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

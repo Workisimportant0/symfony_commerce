@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Libelle;
 use App\Entity\Produit;
+use App\Entity\Slide;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -21,6 +23,24 @@ class AppFixtures extends Fixture
     {
 
         $faker = Faker\Factory::create();
+        $libelleBestSeller = new Libelle();
+        $libelleBestSeller->setNom("Best-seller");
+        $libelleBestSeller->setCouleur("FF0000");
+        $manager->persist($libelleBestSeller);
+
+        $libelleEco = new Libelle();
+        $libelleEco->setNom("Eco-responsable");
+        $libelleEco->setCouleur("00FF00");
+        $manager->persist($libelleEco);
+
+        $libellePromo = new Libelle();
+        $libellePromo->setNom("Promo");
+        $libellePromo->setCouleur("0000FF");
+        $manager->persist($libellePromo);
+
+        $tableauLibelle = [$libelleBestSeller, $libelleEco, $libellePromo];
+
+
 
         $tableauImages = ["miel1.jpg", "miel2.jpg", "miel3.jpg", "miel4.jpg", "miel5.jpg", "miel6.jpg"];
 
@@ -32,6 +52,13 @@ class AppFixtures extends Fixture
                 ->setPrix($faker->randomFloat(2, 10, 40))
                 ->setNomImage($faker->randomElement($tableauImages));
             //->setNomImage($tableauImages[$i + 0]); la méthode là pour avoir chaque image différent;
+
+            $nombreLibelle = $faker->numberBetween(0, 3);
+
+            for ($j = 0; $j < $nombreLibelle; $j++) {
+                $produit->addLibelle($faker->randomElement($tableauLibelle));
+            }
+
 
             $manager->persist($produit); // persist c'est pour preparer la commande        
         }
@@ -52,6 +79,17 @@ class AppFixtures extends Fixture
             ->setPassword($this->hasher->hashPassword($utilisateur, "azerty"));
 
         $manager->persist($utilisateur);
+
+        // CREATION DES SLIDES
+
+        for ($i=1; $i <= 3; $i++){
+            $slide = new Slide();
+            $slide->setTitre($faker->sentence(2))
+            ->setTexte($faker->text(100))
+            ->setNomImage('moz' . $i . '.jpg');
+
+            $manager->persist($slide);
+        }
 
         $manager->flush(); //flush c'est pour enregistrer le produit
     }
