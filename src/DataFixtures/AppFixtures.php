@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 
 use App\Entity\Categorie;
+use App\Entity\Libelle;
 use App\Entity\Produit;
 use App\Entity\Slide;
 use App\Entity\User;
@@ -61,6 +62,24 @@ class AppFixtures extends Fixture
             $categorieCafeSoluble,
         ];
 
+        $libelleBestSeller = new Libelle();
+        $libelleBestSeller->setNom("Best-seller");
+        $libelleBestSeller->setCouleur("FF0000");
+        $manager->persist($libelleBestSeller);
+
+        $libelleEco = new Libelle();
+        $libelleEco->setNom("Eco-responsable");
+        $libelleEco->setCouleur("00FF00");
+        $manager->persist($libelleEco);
+
+        $libellePromo = new Libelle();
+        $libellePromo->setNom("Promo");
+        $libellePromo->setCouleur("0000FF");
+        $manager->persist($libellePromo);
+
+        $tableauLibelle = [$libelleBestSeller, $libelleEco, $libellePromo];
+
+
         for ($i = 0; $i < 10; $i++) {
             $produit = new Produit();
 
@@ -73,7 +92,11 @@ class AppFixtures extends Fixture
 
             //->setNomImage($tableauImages[$i + 0]); la méthode là pour avoir chaque image différent;
 
+            $nombreLibelle = $faker->numberBetween(0, 3);
 
+            for ($j = 0; $j < $nombreLibelle; $j++) {
+                $produit->addLibelle($faker->randomElement($tableauLibelle));
+            }
 
             $manager->persist($produit); // persist c'est pour preparer la commande        
         }

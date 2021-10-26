@@ -1,3 +1,18 @@
 .container {
   max-width: 960px;
 }
+.nomImageProduit{
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+
+}
+
+.divLibelle{
+  position: relative;
+}
+
+.divLibelleUn{
+  position: absolute;
+}
+

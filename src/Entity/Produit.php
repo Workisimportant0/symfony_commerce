@@ -45,6 +45,16 @@ class Produit
      */
     private $categorie;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Libelle::class)
+     */
+    private $libelles;
+
+    public function __construct()
+    {
+        $this->libelles = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +116,30 @@ class Produit
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Libelle[]
+     */
+    public function getLibelles(): Collection
+    {
+        return $this->libelles;
+    }
+
+    public function addLibelle(Libelle $libelle): self
+    {
+        if (!$this->libelles->contains($libelle)) {
+            $this->libelles[] = $libelle;
+        }
+
+        return $this;
+    }
+
+    public function removeLibelle(Libelle $libelle): self
+    {
+        $this->libelles->removeElement($libelle);
 
         return $this;
     }

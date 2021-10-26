@@ -18,7 +18,7 @@ class AccueilController extends AbstractController
     public function index(ProduitRepository $repoProduit, SlideRepository $repoSlide): Response
     {
 
-        $listeProduits = $repoProduit->findAll();
+        $listeProduits = $repoProduit->findAllJoinLibelle();
 
         $listeSlide = $repoSlide->findAll();
 
