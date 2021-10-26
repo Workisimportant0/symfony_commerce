@@ -1,55 +1,47 @@
 {% extends 'base-admin.html.twig' %}
-
-{% block title %}
-	Administration
+{% block title %}Administration
 {% endblock %}
-
 {% block body %}
-	<h1>
-		Gestion des slides
-	</h1>
+<table class="table">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Image</th>
+			<th>Titre</th>
+			<th>Texte</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<a class="btn btn-primary" href="{{ path('creation_slide') }}">
 
-	<table class="table">
-		<thead>
+			Nouveau slide
+
+		</a>
+		{% for slide in listeSlide %}
 			<tr>
-				<th>
-					ID
-				</th>
-				<th>
-					Image
-				</th>
-				<th>
-					Titre
-				</th>
-				<th>
-					Texte
-				</th>
-				<th>
-					Actions
-				</th>
+				<td>{{slide.id}}</td>
+
+				<td><img style="width:50px;height:50px" src="/uploads/{{slide.nomImage}}"></td>
+
+				<td>{{slide.titre}}</td>
+
+				<td>{{slide.texte}}</td>
+
+				<td>
+
+					<a class="btn badge bg-success" href="{{path('edition_slide', {id:slide.id})}}">Modifier</a>
+
+
+					<a class="btn badge bg-danger" href="{{path('supression_slide', {id:slide.id})}}">Supprimer</a>
+
+
+				</td>
 			</tr>
-		</thead>
-		<tbody>
-			{% for slide in listeSlide %}
-				<tr>
-					<td>
-						{{ slide.id }}
-					</td>
-					<td>
-						<img style="width:50px;height:50px" src="/uploads/{{ slide.nomImage }}"/>
-					</td>
-					<td>
-						{{ slide.titre }}
-					</td>
-					<td>
-						{{ slide.texte }}
-					</td>
-					<td>
-						<a class="btn badge bg-success" href="">Modifier</a>
-						<a class="btn badge bg-danger" href="">Supprimer</a>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+
+		{% endfor %}
+	</tbody>
+</table>
+
+
 {% endblock %}

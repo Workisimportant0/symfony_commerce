@@ -40,14 +40,10 @@ class Produit
     private $nomImage;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Libelle::class, inversedBy="produits")
+     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="produits")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $libelles;
-
-    public function __construct()
-    {
-        $this->libelles = new ArrayCollection();
-    }
+    private $categorie;
 
     public function getId(): ?int
     {
@@ -102,26 +98,14 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection|Libelle[]
-     */
-    public function getLibelles(): Collection
+    public function getCategorie(): ?Categorie
     {
-        return $this->libelles;
+        return $this->categorie;
     }
 
-    public function addLibelle(Libelle $libelle): self
+    public function setCategorie(?Categorie $categorie): self
     {
-        if (!$this->libelles->contains($libelle)) {
-            $this->libelles[] = $libelle;
-        }
-
-        return $this;
-    }
-
-    public function removeLibelle(Libelle $libelle): self
-    {
-        $this->libelles->removeElement($libelle);
+        $this->categorie = $categorie;
 
         return $this;
     }
