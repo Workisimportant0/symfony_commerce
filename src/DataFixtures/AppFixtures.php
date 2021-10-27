@@ -7,6 +7,7 @@ use App\Entity\Categorie;
 use App\Entity\Libelle;
 use App\Entity\Produit;
 use App\Entity\Slide;
+use App\Entity\TVA;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -23,7 +24,7 @@ class AppFixtures extends Fixture
     }
     public function load(ObjectManager $manager)
     {
-        $manager = (object) $manager;
+        /*$manager = (object) $manager;
         $manager->getConnection()->executeQuery("
 
             ALTER TABLE produit AUTO_INCREMENT=1;
@@ -34,7 +35,7 @@ class AppFixtures extends Fixture
 
             ALTER TABLE user AUTO_INCREMENT=1;
 
-            ");
+            ");*/
 
         $faker = Faker\Factory::create();
 
@@ -79,15 +80,20 @@ class AppFixtures extends Fixture
 
         $tableauLibelle = [$libelleBestSeller, $libelleEco, $libellePromo];
 
+        $tvaProduit = new TVA();
+        $tvaProduit->setTauxReduit(5.5);
+        $tvaProduit->setTauxIntermediaire(10);
+        $manager->persist($tvaProduit);
 
-        for ($i = 0; $i < 10; $i++) {
+
+        for ($i = 0; $i < 20; $i++) {
             $produit = new Produit();
 
             $produit->setDesignation("Miel '" . $faker->word(3) . "'") // c'est pour la la fiche produit commence par le numéro 1 et non 0
                 ->setDescription($faker->text(100))
                 ->setPrix($faker->randomFloat(2, 10, 40))
                 ->setNomImage($faker->randomElement($tableauImages))
-                ->setCategorie($categorieCafeEnGrain)
+                ->setTva($tvaProduit)
                 ->setCategorie($faker->randomElement($listeCategories));
 
             //->setNomImage($tableauImages[$i + 0]); la méthode là pour avoir chaque image différent;
@@ -123,7 +129,7 @@ class AppFixtures extends Fixture
             $slide = new Slide();
             $slide->setTitre($faker->sentence(3));
             $slide->setTexte($faker->text(100));
-            $slide->setNomImage("cafe" . $i . ".jpg");
+            $slide->setNomImage("moz" . $i . ".jpg");
             $manager->persist($slide);
         }
         $manager->flush(); //flush c'est pour enregistrer le produit

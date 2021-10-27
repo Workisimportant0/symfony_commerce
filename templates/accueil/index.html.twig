@@ -6,6 +6,8 @@
 
 {% block stylesheets %}
 	<link rel="stylesheet" href="/assets/css/carousel.css"/>
+	<link rel="stylesheet" href="/assets/css/form-validation.css"/>
+
 {% endblock %}
 
 {% block body %}
@@ -56,13 +58,13 @@
 				{% for produit in listeProduits %}
 					<div class="col">
 						<div class="card shadow-sm">
-						<div class="divLibelle">
-						<div class="divLibelleUn">
-						{% for libelle in produit.libelles %}
-							<span class="badge" style="background-color:#{{libelle.couleur}}">{{libelle.nom}}</span>
-						{% endfor %}
-						</div>
-							<img style="height:225px;width:100%" src="/uploads/{{ produit.nomImage }}"/>
+							<div class="divLibelle">
+								<div class="divLibelleUn">
+									{% for libelle in produit.libelles %}
+										<span class="badge" style="background-color:#{{libelle.couleur}}">{{libelle.nom}}</span>
+									{% endfor %}
+								</div>
+								<img style="height:225px;width:100%" src="/uploads/{{ produit.nomImage }}"/>
 							</div>
 							<div class="card-body">
 								<h4>
@@ -80,7 +82,16 @@
 											Ajouter au panier
 										</a>
 									</div>
-									<small class="text-muted">{{ produit.prix }}€</small>
+									{# <small class="text-muted">{{ produit.prix }}€</small> #}
+									{% if produit.prix <= 10 %}
+
+										<small class="text-muted">{{ produit.prix * 1.05 }}€</small>
+
+									{% else %}
+
+										<small class="text-muted">{{ produit.prix * 1.10 }}€</small>
+
+									{% endif %}
 								</div>
 							</div>
 						</div>

@@ -50,6 +50,14 @@ class Produit
      */
     private $libelles;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Tva::class, inversedBy="produits")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private Tva $tva;
+
+
+
     public function __construct()
     {
         $this->libelles = new ArrayCollection();
@@ -140,6 +148,18 @@ class Produit
     public function removeLibelle(Libelle $libelle): self
     {
         $this->libelles->removeElement($libelle);
+
+        return $this;
+    }
+
+    public function getTva(): ?Tva
+    {
+        return $this->tva;
+    }
+
+    public function setTva(?Tva $tva): self
+    {
+        $this->tva = $tva;
 
         return $this;
     }

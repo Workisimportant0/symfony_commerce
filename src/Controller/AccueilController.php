@@ -22,6 +22,8 @@ class AccueilController extends AbstractController
 
         $listeSlide = $repoSlide->findAll();
 
+        
+
         return $this->render('accueil/index.html.twig', ["listeProduits" => $listeProduits, "listeSlide" => $listeSlide]);
 
         //render c'est une vue View 
