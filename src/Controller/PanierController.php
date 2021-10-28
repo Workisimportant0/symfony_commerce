@@ -10,12 +10,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PanierController extends AbstractController
 {
-/**
+    /**
 
      * @Route("/panier", name="panier")
 
-     */  
-     public function index(Request $request, ProduitRepository $repo): Response
+     */
+    public function index(Request $request, ProduitRepository $repo): Response
     {
         // on recupere la $session pour recuperer le panier
         $session = $request->getSession();
@@ -26,11 +26,11 @@ class PanierController extends AbstractController
 
         $total = 0;
         $nombreProduit = 0;
-        foreach ($panier as $idProduit => $quantite ){
+        foreach ($panier as $idProduit => $quantite) {
             $nombreProduit += $quantite;
             $produit = $repo->find($idProduit);
             $total += $produit->getPrix() * $quantite;
-            $detailPanier[]= [
+            $detailPanier[] = [
                 'produit' => $repo->find($idProduit),
                 'quantite' => $quantite,
             ];
@@ -43,10 +43,10 @@ class PanierController extends AbstractController
             'nombreProduit' => $nombreProduit,
         ]);
     }
-    
 
 
-/**
+
+    /**
 
      * @Route("/ajout-panier/{id}", name="ajout_panier")
 

@@ -56,11 +56,17 @@ class Produit
      */
     private Tva $tva;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="produit", orphanRemoval=true)
+     */
+    private $comments;
+
 
 
     public function __construct()
     {
         $this->libelles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,6 +166,36 @@ class Produit
     public function setTva(?Tva $tva): self
     {
         $this->tva = $tva;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comments[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getProduit() === $this) {
+                $comment->setProduit(null);
+            }
+        }
 
         return $this;
     }

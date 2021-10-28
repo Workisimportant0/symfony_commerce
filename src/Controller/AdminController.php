@@ -48,6 +48,9 @@ class AdminController extends AbstractController
 
         }
 
+
+
+
         return $this->render('admin/admin-produit.html.twig', [
             'listeProduitParCategorie' => $listeProduitParCategorie,
         ]);
